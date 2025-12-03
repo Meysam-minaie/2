@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>پلیر ساده با زیرنویس</title>
+    <style>
+        /* CSS برای پلیر */
+        #video-container {
+            width: 800px;
+            margin: 50px auto;
+            border: 2px solid #CC0000; /* Red Border for visibility */
+        }
+        #my-video {
+            display: block;
+            width: 100%;
+        }
+        /* استایل سفارشی برای زیرنویس‌ها (در صورت پشتیبانی مرورگر) */
+        ::cue {
+            background-color: rgba(0, 0, 0, 0.7);
+            color: #FFFFFF;
+            font-size: 18px;
+            padding: 5px;
+        }
+    </style>
+</head>
+<body>
+
+    <div id="video-container">
+        <video id="my-video" controls>
+            <source src="https://nairobi.saymyname.website/Movies/2015/2719848/Everest.2015.720p.2CH.x265.HEVC.mkv" type="video/mp4">
+            
+            <track 
+                label="فارسی" 
+                kind="subtitles" 
+                srclang="fa" 
+                src="fa.vtt" 
+                default 
+            >
+            مرورگر شما از تگ ویدئو پشتیبانی نمی‌کند.
+        </video>
+    </div>
+
+    <script>
+        // JavaScript برای مدیریت زیرنویس و پخش
+        document.addEventListener('DOMContentLoaded', () => {
+            const videoElement = document.getElementById('my-video');
+            
+            // گوش دادن به رویداد loadedmetadata برای اطمینان از لود شدن ترک‌ها
+            videoElement.addEventListener('loadedmetadata', () => {
+                const tracks = videoElement.textTracks;
+                
+                if (tracks.length === 0) {
+                    console.error("خطا: ترک زیرنویس پیدا نشد. آیا فایل VTT در src درست است؟");
+                    return;
+                }
+                
+                // فعال‌سازی اولین ترک زیرنویس به طور پیش‌فرض
+                const defaultTrack = tracks[0];
+                defaultTrack.mode = 'showing'; 
+                
+                console.log(`زیرنویس فعال شده: ${defaultTrack.label} (${defaultTrack.srclang})`);
+
+                // برای نمایش زیرنویس‌ها در کنسول (Debugging)
+                defaultTrack.addEventListener('cuechange', function() {
+                    if (this.activeCues && this.activeCues.length > 0) {
+                        // console.log("زیرنویس کنونی:", this.activeCues[0].text);
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>
